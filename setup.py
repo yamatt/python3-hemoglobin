@@ -15,6 +15,7 @@ setup(
     url="https://github.com/yamatt/python3-hemoglobin",
     packages=["hemoglobin"],
     scripts=["scripts/hemoglobin"],
+    install_requires=open("requirements.txt", encoding="utf-8").readlines(),
     license="gplv3",
     project_urls={
         "Source": "https://github.com/yamatt/python3-hemoglobin",

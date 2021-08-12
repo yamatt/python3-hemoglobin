@@ -1,4 +1,4 @@
-name: Public Hemoglobin
+name: Publish Hemoglobin
 
 env:
   name: hemoglobin
@@ -15,10 +15,10 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
-        - name: Set up Python ${{ matrix.python-version }}
+        - name: Set up Python
           uses: actions/setup-python@v2
           with:
-            python-version: ${{ matrix.python-version }}
+            python-version: "3.8"
         - name: Publish to PyPI
           run: |
             python3 -m pip install setuptools==50.1.0 twine==3.2.0 wheel==0.35.1

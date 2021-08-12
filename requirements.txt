@@ -1,1 +1,2 @@
 grammarbot==0.2.0
+python-mimeparse==1.6.0 

@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import List
 
+import mimeparse
 import requests
 
 from grammarbot import GrammarBotClient, GrammarBotApiResponse, GrammarBotMatch
@@ -55,7 +56,7 @@ class HemoglobinGrammarBot(GrammarBotClient):
         return requests.get(self._endpoint, params=params)
 
     def parse_response(self, response):
-        mime_type, _ = response.headers["Content-Type"].split(";")
+        mime_type, _, _ = mimeparse.parse_mime_type(response.headers["Content-Type"])
         if mime_type == "application/json":
             json = response.json()
             return self.API_RESPONSE(json)

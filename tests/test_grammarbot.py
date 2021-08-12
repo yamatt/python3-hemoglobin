@@ -56,9 +56,10 @@ class TestGrammarBotClient(unittest.TestCase):
             result,
         )
 
-    def test_parse_response_correct_content_type_with_mime_parts(self):
+    def test_parse_response_correct_content_type_with_encoding_part(self):
         class MockResponse:
             headers = {"Content-Type": "application/json; charset=UTF-8"}
+            json = Mock()
 
         class MockApiResponse:
             def __init__(self, json):
@@ -69,10 +70,12 @@ class TestGrammarBotClient(unittest.TestCase):
         result = self.test_hemoglobingrammarbot.parse_response(MockResponse)
 
         self.assertIsInstance(result, MockApiResponse)
+        MockResponse.json.assert_called()
 
-    def test_parse_response_correct_content_type_without_mime_parts(self):
+    def test_parse_response_correct_content_type_without_encoding_part(self):
         class MockResponse:
             headers = {"Content-Type": "application/json"}
+            json = Mock()
 
         class MockApiResponse:
             def __init__(self, json):
@@ -83,3 +86,4 @@ class TestGrammarBotClient(unittest.TestCase):
         result = self.test_hemoglobingrammarbot.parse_response(MockResponse)
 
         self.assertIsInstance(result, MockApiResponse)
+        MockResponse.json.assert_called()

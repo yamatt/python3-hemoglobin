@@ -56,8 +56,8 @@ class HemoglobinGrammarBot(GrammarBotClient):
         return requests.get(self._endpoint, params=params)
 
     def parse_response(self, response):
-        mime_type, _, _ = mimeparse.parse_mime_type(response.headers["Content-Type"])
-        if mime_type == "application/json":
+        main_mime_type, sub_mime_type, _ = mimeparse.parse_mime_type(response.headers["Content-Type"])
+        if main_mime_type == "application" and sub_mime_type == "json":
             json = response.json()
             return self.API_RESPONSE(json)
         raise GrammarBotException(response.text)

@@ -34,22 +34,52 @@ class TestGrammarBotApiResponse(unittest.TestCase):
 
 
 class TestGrammarBotClient(unittest.TestCase):
-    def test_create_params(self):
-        test_text = "test text"
-        test_apikey = "test api_key"
-        test_language = Languages.EN_US
+    def setUp(self):
+        self.test_text = "test text"
+        self.test_apikey = "test api_key"
+        self.test_language = Languages.EN_US
 
-        test_hemoglobingrammarbot = GrammarBotClient(
-            api_key=test_apikey, language=test_language
+        self.test_hemoglobingrammarbot = GrammarBotClient(
+            api_key=self.test_apikey, language=self.test_language
         )
 
-        result = test_hemoglobingrammarbot._create_params(test_text)
+    def test_create_params(self):
+
+        result = self.test_hemoglobingrammarbot._create_params(self.test_text)
 
         self.assertEqual(
             {
-                "language": test_language.value,
-                "text": test_text,
-                "api_key": test_apikey,
+                "language": self.test_language.value,
+                "text": self.test_text,
+                "api_key": self.test_apikey,
             },
             result,
         )
+
+    def test_parse_response_correct_content_type_with_mime_parts(self):
+        class MockResponse:
+            headers = "application/json; charset=UTF-8"
+
+        class MockApiResponse:
+            def __init__(self, json):
+                self.json = json
+
+        self.test_hemoglobingrammarbot.API_RESPONSE = MockApiResponse
+
+        result = self.test_hemoglobingrammarbot.parse_response(MockResponse)
+
+        self.assertIsInstance(result, MockApiResponse)
+
+    def test_parse_response_correct_content_type_without_mime_parts(self):
+        class MockResponse:
+            headers = "application/json"
+
+        class MockApiResponse:
+            def __init__(self, json):
+                self.json = json
+
+        self.test_hemoglobingrammarbot.API_RESPONSE = MockApiResponse
+
+        result = self.test_hemoglobingrammarbot.parse_response(MockResponse)
+
+        self.assertIsInstance(result, MockApiResponse)

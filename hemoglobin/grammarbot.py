@@ -50,16 +50,21 @@ class HemoglobinGrammarBot(GrammarBotClient):
     def _create_params(self, text):
         return {"language": self.language.value, "text": text, "api_key": self._api_key}
 
+    def get_response(self, text: str):
+        params = self._create_params(text)
+        return requests.get(self._endpoint, params=params)
+
+    def parse_response(self, response):
+        mime_type, _ = response.headers["Content-Type"].split(";")
+        if mime_type == "application/json":
+            json = response.json()
+            return self.API_RESPONSE(json)
+        raise GrammarBotException(response.text)
+
     def check(self, text: str):
         """
         Check a given piece of text for grammatical errors.
         :param text:
             Text to be checked using the API.
         """
-        params = self._create_params(text)
-        response = requests.get(self._endpoint, params=params)
-        mime_type, _ = response.headers["Content-Type"].split(";")
-        if mime_type == "application/json":
-            json = response.json()
-            return self.API_RESPONSE(json)
-        raise GrammarBotException(response.text)
+        return self.parse_response(self.get_response(text))

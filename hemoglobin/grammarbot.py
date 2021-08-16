@@ -67,7 +67,7 @@ class HemoglobinGrammarBot(GrammarBotClient):
 
     def check_under_max_chars(self, text):
         response = self.get_response(text)
-        self.check_response(response):
+        self.check_response(response)
         return self.API_RESPONSE(response.json())
 
     def check_over_max_chars(self, text):

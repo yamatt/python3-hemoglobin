@@ -90,7 +90,7 @@ class HemoglobinGrammarBot(GrammarBotClient):
                 if (len(buffer) + len(para)) > self.MAX_CHARS:
                     response = self.get_response(buffer)
                     self.check_response(response)
-                    results["matches"].append(response.json()["matches"])
+                    results["matches"] += response.json()["matches"]
                     buffer = para
                 else:
                     buffer += para

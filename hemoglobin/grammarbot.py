@@ -35,6 +35,9 @@ class HemoglobinGrammarBotApiResponse(GrammarBotApiResponse):
         """
         return [self.MATCH(mjson) for mjson in self._json["matches"]]
 
+    def to_dict(self):
+        return self.matches
+
 
 class HemoglobinGrammarBot(GrammarBotClient):
     API_RESPONSE = HemoglobinGrammarBotApiResponse

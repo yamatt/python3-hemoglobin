@@ -103,10 +103,12 @@ class TestGrammarBotClient(unittest.TestCase):
         self.test_hemoglobingrammarbot.MAX_CHARS = 100  # line above is 136 chars
 
         class MockResponse:
-            json = Mock(side_effect=[
-                {"matches": [{"name": "foo"}]},
-                {"matches": [{"name": "bar"}]},
-            ])
+            json = Mock(
+                side_effect=[
+                    {"matches": [{"name": "foo"}]},
+                    {"matches": [{"name": "bar"}]},
+                ]
+            )
 
         class MockApiResponse:
             def __init__(self, *args):

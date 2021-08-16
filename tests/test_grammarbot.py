@@ -110,12 +110,14 @@ class TestGrammarBotClient(unittest.TestCase):
                 ]
             )
 
+
+
         class MockApiResponse:
             def __init__(self, *args):
                 self.args = args
 
         self.test_hemoglobingrammarbot.API_RESPONSE = MockApiResponse
-        self.test_hemoglobingrammarbot.get_response = MockResponse
+        self.test_hemoglobingrammarbot.get_response = Mock(return_value=MockResponse)
         self.test_hemoglobingrammarbot.check_response = Mock()
 
         result = self.test_hemoglobingrammarbot.check_over_max_chars(test_short_text)

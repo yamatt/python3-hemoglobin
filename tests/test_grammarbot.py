@@ -100,5 +100,11 @@ class TestGrammarBotClient(unittest.TestCase):
     def test_check_over_max_chars(self):
         test_short_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n\nPhasellus augue odio, consectetur ut justo nec, sollicitudin convallis libero."""
 
+        self.test_hemoglobingrammarbot.MAX_CHARS = 100  # line above is 136 chars
+
         self.test_hemoglobingrammarbot.get_response = Mock()
         self.test_hemoglobingrammarbot.check_response = Mock()
+
+        self.test_hemoglobingrammarbot.check_over_max_chars(test_short_text)
+
+        self.assertEqual(self.test_hemoglobingrammarbot.get_response.call_count, 2)

@@ -26,8 +26,6 @@ class TestHemoglobinFile(unittest.TestCase):
                 class APIResponse:
                     raw_json = {"test": "value"}
 
-                check = Mock(return_value=APIResponse)
-
         mock_file = Mock(return_value=test_file_contents)
 
         test_hemoglobinfile = HemoglobinFile(mock_file, MockHemoglobin)

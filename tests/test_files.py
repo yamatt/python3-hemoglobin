@@ -35,7 +35,7 @@ class TestHemoglobinFile(unittest.TestCase):
 
         test_hemoglobinfile = HemoglobinFile(mock_file, MockHemoglobin)
 
-        test_hemoglobinfile.text = test_file_contents
+        test_hemoglobinfile._text = test_file_contents
 
         result = test_hemoglobinfile.to_dict()
 

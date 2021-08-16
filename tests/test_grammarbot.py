@@ -109,9 +109,7 @@ class TestGrammarBotClient(unittest.TestCase):
                     {"matches": [{"name": "bar"}]},
                 ]
             )
-
-
-
+        
         class MockApiResponse:
             def __init__(self, *args):
                 self.args = args

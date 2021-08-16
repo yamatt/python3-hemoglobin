@@ -75,7 +75,9 @@ class TestGrammarBotClient(unittest.TestCase):
             self.test_hemoglobingrammarbot.check_response(MockResponse)
 
     def test_under_max_chars(self):
-        test_short_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus augue odio, consectetur ut justo nec, sollicitudin convallis libero. Donec condimentum diam non urna euismod maximus. Duis dolor sapien, dictum et ipsum vel, posuere fermentum urna. Vivamus a gravida turpis. Vivamus eleifend ligula at magna placerat, eget sodales velit condimentum. Nunc iaculis quam id erat dictum aliquet. Pellentesque lobortis porta diam at consequat."""
+        test_short_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n\nPhasellus augue odio, consectetur ut justo nec, sollicitudin convallis libero."""
+
+        self.test_hemoglobingrammarbot.MAX_CHARS = 200 # line above is 135 chars
 
         self.test_hemoglobingrammarbot.check_under_max_chars = Mock()
         self.test_hemoglobingrammarbot.check_over_max_chars = Mock()
@@ -86,12 +88,14 @@ class TestGrammarBotClient(unittest.TestCase):
         self.test_hemoglobingrammarbot.check_over_max_chars.assert_not_called()
 
     def test_over_max_chars(self):
-        test_short_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus augue odio, consectetur ut justo nec, sollicitudin convallis libero. Donec condimentum diam non urna euismod maximus. Duis dolor sapien, dictum et ipsum vel, posuere fermentum urna. Vivamus a gravida turpis. Vivamus eleifend ligula at magna placerat, eget sodales velit condimentum. Nunc iaculis quam id erat dictum aliquet. Pellentesque lobortis porta diam at consequat."""
+        test_short_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n\nPhasellus augue odio, consectetur ut justo nec, sollicitudin convallis libero."""
+
+        self.test_hemoglobingrammarbot.MAX_CHARS = 100 # line above is 135 chars
 
         self.test_hemoglobingrammarbot.check_under_max_chars = Mock()
         self.test_hemoglobingrammarbot.check_over_max_chars = Mock()
 
-        self.test_hemoglobingrammarbot.check(test_short_text*23)
+        self.test_hemoglobingrammarbot.check(test_short_text)
 
         self.test_hemoglobingrammarbot.check_under_max_chars.assert_not_called()
         self.test_hemoglobingrammarbot.check_over_max_chars.assert_called()

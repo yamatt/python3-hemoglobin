@@ -20,11 +20,14 @@ class TestHemoglobinFile(unittest.TestCase):
 
     def test_to_dictionary(self):
         test_file_contents = "test file response"
+        test_response = {"test": "value"}
 
         class MockHemoglobin:
             class grammarbot:
                 class APIResponse:
-                    raw_json = {"test": "value"}
+                    to_dict = Mock(return_value=test_response)
+
+                check = Mock(return_value=APIResponse)
 
         mock_file = Mock(return_value=test_file_contents)
 
@@ -32,7 +35,7 @@ class TestHemoglobinFile(unittest.TestCase):
 
         result = test_hemoglobinfile.to_dict()
 
-        self.assertEqual(MockHemoglobin.grammarbot.APIResponse.raw_json, result)
+        self.assertEqual(test_response, result)
         MockHemoglobin.grammarbot.check.assert_called()
 
     def test_from_path_cls(self):

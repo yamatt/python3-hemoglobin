@@ -48,6 +48,11 @@ def render_human(hemoglobin):
             print("\t\t\tType: {type}".format(type=match.type))
             print("\t\t\tCategory: {category}".format(category=match.category))
             print("\t\t\tRule: {rule}".format(rule=match.rule))
+    print(
+        "Number of API calls made: {api_calls_made}".format(
+            api_calls_made=hemoglobin.grammarbot.api_calls_made
+        )
+    )
 
 
 def render_json(hemoglobin):

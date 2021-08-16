@@ -46,7 +46,27 @@ jobs:
           python3 -m pip install --upgrade pip
           python3 -m pip install -r requirements.txt
       - name: Test
+        run: python3 -m unittest discover tests
+  functional-test:
+    name: Test the cli by running it
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+        os: [ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
         run: |
-          python3 -m unittest discover tests
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r requirements.txt
+      - name: Run the cli
+        run: |
           python3 -m ${{ env.name }} --help
           python3 -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" samples/example.txt

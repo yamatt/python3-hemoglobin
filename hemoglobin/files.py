@@ -56,4 +56,4 @@ class HemoglobinFile(object):
         :return: A dictionary representation of the results
         :rtype: dict
         """
-        return self.get_grammarbot_response().raw_json
+        return self.get_grammarbot_response().to_dict()

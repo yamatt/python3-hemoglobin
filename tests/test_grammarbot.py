@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from hemoglobin.grammarbot import (
+    GrammarBotException,
     HemoglobinGrammarBot as GrammarBotClient,
     HemoglobinGrammarBotApiResponse as GrammarBotApiResponse,
     HemoglobinGrammarBotMatch as GrammarBotMatch,
@@ -59,31 +60,67 @@ class TestGrammarBotClient(unittest.TestCase):
     def test_parse_response_correct_content_type_with_encoding_part(self):
         class MockResponse:
             headers = {"Content-Type": "application/json; charset=UTF-8"}
-            json = Mock()
 
-        class MockApiResponse:
-            def __init__(self, json):
-                self.json = json
+        result = self.test_hemoglobingrammarbot.check_response(MockResponse)
 
-        self.test_hemoglobingrammarbot.API_RESPONSE = MockApiResponse
-
-        result = self.test_hemoglobingrammarbot.parse_response(MockResponse)
-
-        self.assertIsInstance(result, MockApiResponse)
-        MockResponse.json.assert_called()
-
-    def test_parse_response_correct_content_type_without_encoding_part(self):
+    def test_check_response_correct_content_type_without_encoding_part(self):
         class MockResponse:
-            headers = {"Content-Type": "application/json"}
-            json = Mock()
+            headers = {"Content-Type": "binary/text"}
+            text = "example error"
+
+        with self.assertRaises(GrammarBotException):
+            self.test_hemoglobingrammarbot.check_response(MockResponse)
+
+    def test_under_max_chars(self):
+        test_short_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n\nPhasellus augue odio, consectetur ut justo nec, sollicitudin convallis libero."""
+
+        self.test_hemoglobingrammarbot.MAX_CHARS = 200  # line above is 136 chars
+
+        self.test_hemoglobingrammarbot.check_under_max_chars = Mock()
+        self.test_hemoglobingrammarbot.check_over_max_chars = Mock()
+
+        self.test_hemoglobingrammarbot.check(test_short_text)
+
+        self.test_hemoglobingrammarbot.check_under_max_chars.assert_called()
+        self.test_hemoglobingrammarbot.check_over_max_chars.assert_not_called()
+
+    def test_over_max_chars(self):
+        test_short_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n\nPhasellus augue odio, consectetur ut justo nec, sollicitudin convallis libero."""
+
+        self.test_hemoglobingrammarbot.MAX_CHARS = 100  # line above is 136 chars
+
+        self.test_hemoglobingrammarbot.check_under_max_chars = Mock()
+        self.test_hemoglobingrammarbot.check_over_max_chars = Mock()
+
+        self.test_hemoglobingrammarbot.check(test_short_text)
+
+        self.test_hemoglobingrammarbot.check_under_max_chars.assert_not_called()
+        self.test_hemoglobingrammarbot.check_over_max_chars.assert_called()
+
+    def test_check_over_max_chars(self):
+        test_short_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n\nPhasellus augue odio, consectetur ut justo nec, sollicitudin convallis libero."""
+
+        self.test_hemoglobingrammarbot.MAX_CHARS = 100  # line above is 136 chars
+
+        class MockResponse:
+            json = Mock(
+                side_effect=[
+                    {"matches": [{"name": "foo"}]},
+                    {"matches": [{"name": "bar"}]},
+                ]
+            )
 
         class MockApiResponse:
-            def __init__(self, json):
-                self.json = json
+            def __init__(self, *args):
+                self.args = args
 
         self.test_hemoglobingrammarbot.API_RESPONSE = MockApiResponse
+        self.test_hemoglobingrammarbot.get_response = Mock(return_value=MockResponse)
+        self.test_hemoglobingrammarbot.check_response = Mock()
 
-        result = self.test_hemoglobingrammarbot.parse_response(MockResponse)
+        result = self.test_hemoglobingrammarbot.check_over_max_chars(test_short_text)
 
-        self.assertIsInstance(result, MockApiResponse)
-        MockResponse.json.assert_called()
+        self.assertEqual(self.test_hemoglobingrammarbot.get_response.call_count, 2)
+        self.assertEqual(
+            {"matches": [{"name": "foo"}, {"name": "bar"}]}, result.args[0]
+        )

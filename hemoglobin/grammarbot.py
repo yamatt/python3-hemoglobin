@@ -98,7 +98,7 @@ class HemoglobinGrammarBot(GrammarBotClient):
         response = self.get_response(buffer)
         self.check_response(response)
         results["matches"].append(response.json()["matches"])
-        
+
         return self.API_RESPONSE(results)
 
     def check(self, text: str):

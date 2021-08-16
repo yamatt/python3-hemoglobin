@@ -61,7 +61,6 @@ class TestGrammarBotClient(unittest.TestCase):
         class MockResponse:
             headers = {"Content-Type": "application/json; charset=UTF-8"}
 
-
         result = self.test_hemoglobingrammarbot.check_response(MockResponse)
 
     def test_check_response_correct_content_type_without_encoding_part(self):

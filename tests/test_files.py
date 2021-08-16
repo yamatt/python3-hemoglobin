@@ -24,6 +24,7 @@ class TestHemoglobinFile(unittest.TestCase):
 
         class MockHemoglobin:
             class grammarbot:
+                MAX_CHARS = 1
                 class APIResponse:
                     to_dict = Mock(return_value=test_response)
 

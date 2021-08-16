@@ -82,7 +82,8 @@ class HemoglobinGrammarBot(GrammarBotClient):
                     raise GrammarBotException(
                         "A paragraph is longer than {max_chars} maximum number of characters for GrammarBot. Processing cannot continue.".format(
                             max_chars=self.MAX_CHARS
-                        ))
+                        )
+                    )
                 if (len(buffer) + len(para)) > self.MAX_CHARS:
                     response = self.get_response(text)
                     self.check_response(response)

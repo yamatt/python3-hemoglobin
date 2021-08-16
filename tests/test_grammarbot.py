@@ -102,9 +102,21 @@ class TestGrammarBotClient(unittest.TestCase):
 
         self.test_hemoglobingrammarbot.MAX_CHARS = 100  # line above is 136 chars
 
-        self.test_hemoglobingrammarbot.get_response = Mock()
+        class MockResponse:
+            json = Mock(side_effect=[
+                {"matches": [{"name": "foo"}]},
+                {"matches": [{"name": "bar"}]},
+            ])
+
+        class MockApiResponse:
+            def __init__(self, *args):
+                self.args = args
+
+        self.test_hemoglobingrammarbot.API_RESPONSE = MockApiResponse
+        self.test_hemoglobingrammarbot.get_response = MockResponse
         self.test_hemoglobingrammarbot.check_response = Mock()
 
-        self.test_hemoglobingrammarbot.check_over_max_chars(test_short_text)
+        result = self.test_hemoglobingrammarbot.check_over_max_chars(test_short_text)
 
         self.assertEqual(self.test_hemoglobingrammarbot.get_response.call_count, 2)
+        self.assertEqual({"matches": [{"name": "foo"}, {"name": "bar"}]}, result.args)

@@ -1,5 +1,6 @@
 import warnings
 
+
 class HemoglobinFile(object):
     """An object that represents files on your system to run the tests against."""
 
@@ -54,7 +55,7 @@ class HemoglobinFile(object):
                 "File '{file_path}' is {file_length} characters log, and over {max_chars} characters the GrammarBot API allows. The contents of the file will be broken up to be processed.".format(
                     file_chars=self.f.name,
                     file_length=len(self.text),
-                    max_chars=self.hemoglobin.grammarbot.MAX_CHARS
+                    max_chars=self.hemoglobin.grammarbot.MAX_CHARS,
                 )
             )
         return self.hemoglobin.grammarbot.check(self.text)

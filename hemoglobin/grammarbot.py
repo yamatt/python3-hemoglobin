@@ -62,7 +62,7 @@ class HemoglobinGrammarBot(GrammarBotClient):
         main_mime_type, sub_mime_type, _ = mimeparse.parse_mime_type(
             response.headers["Content-Type"]
         )
-        if main_mime_type != "application" or sub_mime_type != "json":
+        if not (main_mime_type == "application" and sub_mime_type == "json"):
             raise GrammarBotException(response.text)
 
     def check_under_max_chars(self, text):
@@ -100,6 +100,6 @@ class HemoglobinGrammarBot(GrammarBotClient):
             Text to be checked using the API.
         """
         if len(text) < self.MAX_CHARS:
-            self.check_under_max_chars(text)
+            return self.check_under_max_chars(text)
         else:
-            self.check_over_max_chars(text)
+            return self.check_over_max_chars(text)

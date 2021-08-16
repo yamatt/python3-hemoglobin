@@ -6,7 +6,7 @@ from unittest.mock import Mock
 from hemoglobin.files import HemoglobinFile
 
 
-class TestTextStatFile(unittest.TestCase):
+class TestHemoglobinFile(unittest.TestCase):
     def test_text(self):
         test_file_contents = "test file contents"
         with StringIO(test_file_contents) as test_file:

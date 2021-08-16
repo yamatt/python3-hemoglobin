@@ -109,7 +109,7 @@ class TestGrammarBotClient(unittest.TestCase):
                     {"matches": [{"name": "bar"}]},
                 ]
             )
-        
+
         class MockApiResponse:
             def __init__(self, *args):
                 self.args = args
@@ -121,4 +121,4 @@ class TestGrammarBotClient(unittest.TestCase):
         result = self.test_hemoglobingrammarbot.check_over_max_chars(test_short_text)
 
         self.assertEqual(self.test_hemoglobingrammarbot.get_response.call_count, 2)
-        self.assertEqual({"matches": [{"name": "foo"}, {"name": "bar"}]}, result.args)
+        self.assertEqual({"matches": [{"name": "foo"}, {"name": "bar"}]}, result.args[0])

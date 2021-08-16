@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from hemoglobin.grammarbot import (
+    GrammarBotException,
     HemoglobinGrammarBot as GrammarBotClient,
     HemoglobinGrammarBotApiResponse as GrammarBotApiResponse,
     HemoglobinGrammarBotMatch as GrammarBotMatch,
@@ -59,31 +60,44 @@ class TestGrammarBotClient(unittest.TestCase):
     def test_parse_response_correct_content_type_with_encoding_part(self):
         class MockResponse:
             headers = {"Content-Type": "application/json; charset=UTF-8"}
-            json = Mock()
-
-        class MockApiResponse:
-            def __init__(self, json):
-                self.json = json
 
         self.test_hemoglobingrammarbot.API_RESPONSE = MockApiResponse
 
         result = self.test_hemoglobingrammarbot.parse_response(MockResponse)
 
-        self.assertIsInstance(result, MockApiResponse)
-        MockResponse.json.assert_called()
-
-    def test_parse_response_correct_content_type_without_encoding_part(self):
+    def test_check_response_correct_content_type_without_encoding_part(self):
         class MockResponse:
             headers = {"Content-Type": "application/json"}
-            json = Mock()
-
-        class MockApiResponse:
-            def __init__(self, json):
-                self.json = json
 
         self.test_hemoglobingrammarbot.API_RESPONSE = MockApiResponse
 
-        result = self.test_hemoglobingrammarbot.parse_response(MockResponse)
+        with self.assertRaises(GrammarBotException):
+            self.test_hemoglobingrammarbot.check_response(MockResponse)
 
-        self.assertIsInstance(result, MockApiResponse)
-        MockResponse.json.assert_called()
+    def test_under_max_chars(self):
+        test_short_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus augue odio, consectetur ut justo nec, sollicitudin convallis libero. Donec condimentum diam non urna euismod maximus. Duis dolor sapien, dictum et ipsum vel, posuere fermentum urna. Vivamus a gravida turpis. Vivamus eleifend ligula at magna placerat, eget sodales velit condimentum. Nunc iaculis quam id erat dictum aliquet. Pellentesque lobortis porta diam at consequat."""
+
+        self.test_hemoglobingrammarbot.check_under_max_chars = Mock()
+        self.test_hemoglobingrammarbot.check_over_max_chars = Mock()
+
+        self.test_hemoglobingrammarbot.check(test_short_text)
+
+        self.test_hemoglobingrammarbot.check_under_max_chars.assert_called()
+        self.test_hemoglobingrammarbot.check_over_max_chars.assert_not_called()
+
+    def test_over_max_chars(self):
+        test_short_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus augue odio, consectetur ut justo nec, sollicitudin convallis libero. Donec condimentum diam non urna euismod maximus. Duis dolor sapien, dictum et ipsum vel, posuere fermentum urna. Vivamus a gravida turpis. Vivamus eleifend ligula at magna placerat, eget sodales velit condimentum. Nunc iaculis quam id erat dictum aliquet. Pellentesque lobortis porta diam at consequat."""
+
+        self.test_hemoglobingrammarbot.check_under_max_chars = Mock()
+        self.test_hemoglobingrammarbot.check_over_max_chars = Mock()
+
+        self.test_hemoglobingrammarbot.check(test_short_text*23)
+
+        self.test_hemoglobingrammarbot.check_under_max_chars.assert_not_called()
+        self.test_hemoglobingrammarbot.check_over_max_chars.assert_called()
+
+    def test_check_over_max_chars(self):
+        test_short_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus augue odio, consectetur ut justo nec, sollicitudin convallis libero. Donec condimentum diam non urna euismod maximus. Duis dolor sapien, dictum et ipsum vel, posuere fermentum urna. Vivamus a gravida turpis. Vivamus eleifend ligula at magna placerat, eget sodales velit condimentum. Nunc iaculis quam id erat dictum aliquet. Pellentesque lobortis porta diam at consequat.\n\n"""
+
+        self.test_hemoglobingrammarbot.get_response = Mock()
+        self.test_hemoglobingrammarbot.check_response = Mock()

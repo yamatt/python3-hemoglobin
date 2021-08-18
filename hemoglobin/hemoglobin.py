@@ -6,7 +6,7 @@ import os
 from .grammarbot import HemoglobinGrammarBot as GrammarBotClient
 from .files import HemoglobinFile
 
-BaseConfig = namedtuple("Config", ["apikey", "paths", "language", "log_level"])
+BaseConfig = namedtuple("Config", ["apikey", "paths", "language"])
 
 
 class Config(BaseConfig):

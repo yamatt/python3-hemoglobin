@@ -88,6 +88,6 @@ jobs:
           python3 -m pip install -r requirements.txt
       - name: Run the cli with large files
         run: |
-          python3 -c 'print(len(open("./samples/long_1000c.txt", "r").read()*${{ matrix.text-length-thousands }}))' > test.txt
+          python3 -c 'print(open("./samples/long_1000c.txt", "r").read()*${{ matrix.text-length-thousands }})' > test.txt
           wc -c test.txt
           python3 -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" test.txt

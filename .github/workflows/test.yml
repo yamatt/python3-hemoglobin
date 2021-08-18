@@ -70,7 +70,7 @@ jobs:
           python3 -m ${{ env.name }} --help
           python3 -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" samples/example.txt
   api-length-check:
-    name: Checks the max chars in the CLI
+    name: Checks the max chars in the CLI thousands:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -86,7 +86,8 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install -r requirements.txt
-      - name: Run the cli
+      - name: Run the cli with large files
         run: |
           python3 -c 'print(len(open("./samples/long_1000c.txt", "r").read()*${{ matrix.text-length-thousands }}))' > test.txt
+          wc -c test.txt
           python3 -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" test.txt

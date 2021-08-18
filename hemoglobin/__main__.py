@@ -1,6 +1,7 @@
 import argparse
 from getpass import getpass
 from json import dumps as json_dumps
+import logging
 
 from .hemoglobin import Hemoglobin, Config
 from .grammarbot import Language as Languages
@@ -30,6 +31,7 @@ def create_args():
         type=Languages,
         default=Languages.EN_US,
     )
+    parser.add_argument("--log", dest="log_level", help="Log level.", default="warning")
 
     parser.add_argument("path", help="Where to find these files to parse.", nargs="+")
     return parser
@@ -61,6 +63,7 @@ def render_json(hemoglobin):
 
 if __name__ == "__main__":
     args = create_args().parse_args()
+    logging.basicConfig(level=args.log_level.upper())
     hemoglobin = Hemoglobin.from_config(Config.from_args(args))
     if args.use_json_output:
         render_json(hemoglobin)

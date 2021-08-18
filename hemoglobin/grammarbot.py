@@ -41,7 +41,7 @@ class HemoglobinGrammarBotApiResponse(GrammarBotApiResponse):
 
 class HemoglobinGrammarBot(GrammarBotClient):
     API_RESPONSE = HemoglobinGrammarBotApiResponse
-    MAX_CHARS = 10000
+    MAX_CHARS = 7000
 
     def __init__(
         self,

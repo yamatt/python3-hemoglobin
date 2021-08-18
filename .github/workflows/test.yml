@@ -55,7 +55,6 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8]
         os: [ubuntu-latest]
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -70,3 +69,24 @@ jobs:
         run: |
           python3 -m ${{ env.name }} --help
           python3 -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" samples/example.txt
+  api-length-check:
+    name: Checks the max chars in the CLI
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        text-length-thousands: [5, 9, 10, 11]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r requirements.txt
+      - name: Run the cli
+        run: |
+          python3 -c 'print(len(open("./samples/long_1000c.txt", "r").read()*${{ matrix.text-length-thousands }}))' > test.txt
+          python3 -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" test.txt

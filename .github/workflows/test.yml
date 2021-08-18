@@ -72,6 +72,7 @@ jobs:
   api-length-check:
     name: 'Checks the max chars in the CLI thousands:'
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       max-parallel: 3
       fail-fast: false

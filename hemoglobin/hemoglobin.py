@@ -28,7 +28,6 @@ class Config(BaseConfig):
         if not language:
             if cls.GRAMMARBOT_LANGUAGE_ENV_NAME in os.environ:
                 language = os.environ[cls.GRAMMARBOT_LANGUAGE_ENV_NAME]
-        logging.basicConfig(level=args.log_level.upper())
         return cls(apikey=apikey, paths=args.path, language=args.language)
 
 

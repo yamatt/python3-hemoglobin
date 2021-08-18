@@ -62,6 +62,7 @@ def render_json(hemoglobin):
 
 if __name__ == "__main__":
     args = create_args().parse_args()
+    logging.basicConfig(level=args.log_level.upper())
     hemoglobin = Hemoglobin.from_config(Config.from_args(args))
     if args.use_json_output:
         render_json(hemoglobin)

@@ -30,6 +30,11 @@ def create_args():
         type=Languages,
         default=Languages.EN_US,
     )
+    parser.add_argument(
+        "--log",
+        help="Log level.",
+        default="warning",
+    )
 
     parser.add_argument("path", help="Where to find these files to parse.", nargs="+")
     return parser

@@ -1,11 +1,12 @@
 from collections import namedtuple
 from getpass import getpass
+import logging
 import os
 
 from .grammarbot import HemoglobinGrammarBot as GrammarBotClient
 from .files import HemoglobinFile
 
-BaseConfig = namedtuple("Config", ["apikey", "paths", "language"])
+BaseConfig = namedtuple("Config", ["apikey", "paths", "language", "log_level"])
 
 
 class Config(BaseConfig):
@@ -27,6 +28,7 @@ class Config(BaseConfig):
         if not language:
             if cls.GRAMMARBOT_LANGUAGE_ENV_NAME in os.environ:
                 language = os.environ[cls.GRAMMARBOT_LANGUAGE_ENV_NAME]
+        logging.basicConfig(level=args.log_level.upper())
         return cls(apikey=apikey, paths=args.path, language=args.language)
 
 

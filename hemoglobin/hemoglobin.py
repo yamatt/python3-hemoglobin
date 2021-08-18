@@ -1,6 +1,5 @@
 from collections import namedtuple
 from getpass import getpass
-import logging
 import os
 
 from .grammarbot import HemoglobinGrammarBot as GrammarBotClient

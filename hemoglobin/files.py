@@ -51,7 +51,7 @@ class HemoglobinFile(object):
 
     def get_grammarbot_response(self):
         logging.info("Length of file {file_name} is {file_length}".format(
-            file_name=self.f.name
+            file_name=self.f.name,
             file_length=len(self.text),
         ))
         if len(self.text) > self.hemoglobin.grammarbot.MAX_CHARS:

@@ -70,7 +70,7 @@ jobs:
           python3 -m ${{ env.name }} --help
           python3 -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" samples/example.txt
   api-length-check:
-    name: Checks the max chars in the CLI thousands:
+    name: 'Checks the max chars in the CLI thousands:'
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4

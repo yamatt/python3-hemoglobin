@@ -73,9 +73,10 @@ jobs:
     name: 'Checks the max chars in the CLI thousands:'
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 4
+      max-parallel: 3
+      fail-fast: false
       matrix:
-        text-length-thousands: [2, 5, 9]
+        text-length-thousands: [2, 5, 7, 8, 9, 10]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python

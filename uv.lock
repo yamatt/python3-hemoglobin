@@ -286,8 +286,7 @@ wheels = [
 
 [[package]]
 name = "python3-hemoglobin"
-version = "0.0.11"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "grammarbot" },
     { name = "python-mimeparse" },

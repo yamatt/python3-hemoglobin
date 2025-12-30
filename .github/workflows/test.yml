@@ -4,73 +4,78 @@ env:
   name: hemoglobin
   command: hemoglobin
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   lint:
-    name: Run some linting
-    runs-on: ubuntu-20.04
+    name: Lint Code
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Lint
+      - uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Set up Python
+        run: uv python install
+      - name: Run linters
         run: |
-          python3 -m pip install flake8==3.7.8
-          python3 -m pip install black==19.10b0
-          # look for formatting errors
-          python3 -m black --diff --check --target-version py35 --target-version py36 --target-version py37 .
-          # stop the build if there are Python syntax errors or undefined names
-          python3 -m flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          python3 -m flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          uv run black --check --diff hemoglobin tests
+          uv run isort --check-only hemoglobin tests
+  security-scanner:
+    name: Security Scanner
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Set up Python
+        run: uv python install
+      - name: Run Bandit
+        run: |
+          uv run bandit -r hemoglobin
   test:
     name: Test the library
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.10, 3.11, 3.12, 3.13, 3.14]
         os: [ubuntu-latest]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install -r requirements.txt
+      - name: Set up Python
+        run: uv python install
       - name: Test
-        run: python3 -m unittest discover tests
+        run: uv run -m unittest discover tests
   functional-test:
     name: Test the cli by running it
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.10, 3.11, 3.12, 3.13, 3.14]
         os: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install -r requirements.txt
+      - name: Set up Python
+        run: uv python install
       - name: Run the cli
         run: |
-          python3 -m ${{ env.name }} --help
-          python3 -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" samples/example.txt
+          uv run -m ${{ env.name }} --help
+          uv run -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" samples/example.txt
   api-length-check:
-    name: 'Checks the max chars in the CLI thousands:'
+    name: "Checks the max chars in the CLI thousands:"
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 3
@@ -78,15 +83,11 @@ jobs:
       matrix:
         text-length-thousands: [2, 5, 7, 8, 9, 10]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
       - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install -r requirements.txt
+        run: uv python install
       - name: Run the cli with large files
         run: |
           python3 -c 'print(open("./samples/long_1000c.txt", "r").read()*${{ matrix.text-length-thousands }})' > test.txt

@@ -101,4 +101,4 @@ jobs:
         run: |
           python3 -c 'print(open("./samples/long_1000c.txt", "r").read()*${{ matrix.text-length-thousands }})' > test.txt
           wc -c test.txt
-          python3 -m ${{ env.name }} --log INFO "${{secrets.GRAMMARBOT_APIKEY}}" test.txt
+          uv run -m ${{ env.name }} --log INFO "${{secrets.GRAMMARBOT_APIKEY}}" test.txt

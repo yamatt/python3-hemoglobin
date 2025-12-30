@@ -24,9 +24,11 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Set up Python
         run: uv python install
+      - name: Install Dependencies
+        run: uv sync --locked --dev
       - name: Run linters
         run: |
-          uv run black --no-project --check --diff hemoglobin tests
+          uv run black --check --diff hemoglobin tests
   security-scanner:
     name: Security Scanner
     runs-on: ubuntu-latest
@@ -38,9 +40,11 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Set up Python
         run: uv python install
+      - name: Install Dependencies
+        run: uv sync --locked --dev
       - name: Run Bandit
         run: |
-          uv run --no-project bandit -r hemoglobin
+          uv run bandit -r hemoglobin
   test:
     name: Test the library
     runs-on: ubuntu-latest
@@ -57,7 +61,6 @@ jobs:
           - "3.13"
           - "3.14"
         os: [ubuntu-latest]
-
     steps:
       - uses: actions/checkout@v6
         with:
@@ -68,8 +71,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Set up Python
         run: uv python install
+      - name: Install Dependencies
+        run: uv sync --locked --dev
       - name: Test
-        run: uv run --no-project -m unittest discover tests
+        run: uv run -m unittest discover tests
   functional-test:
     name: Test the cli by running it
     runs-on: ubuntu-latest
@@ -95,10 +100,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Set up Python
         run: uv python install
+      - name: Install Dependencies
+        run: uv sync --locked --dev
       - name: Run the cli
         run: |
-          uv run --no-project -m ${{ env.name }} --help
-          uv run --no-project -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" samples/example.txt
+          uv run -m ${{ env.name }} --help
+          uv run -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" samples/example.txt
   api-length-check:
     name: "Checks the max chars in the CLI thousands:"
     runs-on: ubuntu-latest
@@ -116,9 +123,9 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
       - name: Install the project
-        run: uv sync --locked --all-extras --dev
+        run: uv sync --locked --dev
       - name: Run the cli with large files
         run: |
           python3 -c 'print(open("./samples/long_1000c.txt", "r").read()*${{ matrix.text-length-thousands }})' > test.txt
           wc -c test.txt
-          uv run --no-project -m ${{ env.name }} --log INFO "${{secrets.GRAMMARBOT_APIKEY}}" test.txt
+          uv run -m ${{ env.name }} --log INFO "${{secrets.GRAMMARBOT_APIKEY}}" test.txt

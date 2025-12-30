@@ -3,8 +3,9 @@ from unittest.mock import Mock
 
 from hemoglobin.grammarbot import GrammarBotException
 from hemoglobin.grammarbot import HemoglobinGrammarBot as GrammarBotClient
-from hemoglobin.grammarbot import \
-    HemoglobinGrammarBotApiResponse as GrammarBotApiResponse
+from hemoglobin.grammarbot import (
+    HemoglobinGrammarBotApiResponse as GrammarBotApiResponse,
+)
 from hemoglobin.grammarbot import HemoglobinGrammarBotMatch as GrammarBotMatch
 from hemoglobin.grammarbot import Language as Languages
 

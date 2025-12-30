@@ -22,7 +22,6 @@ jobs:
       - name: Run linters
         run: |
           uv run black --check --diff hemoglobin tests
-          uv run isort --check-only hemoglobin tests
   security-scanner:
     name: Security Scanner
     runs-on: ubuntu-latest

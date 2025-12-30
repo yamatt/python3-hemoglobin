@@ -15,7 +15,8 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [tool.hatch.version]
-source = "vcs" # VCS = Version Control System (Git)
+source = "vcs"             # VCS = Version Control System (Git)
+fallback-version = "0.0.0" # <--- Add this line
 
 [tool.hatch.version.raw-options]
 local_scheme = "no-local-version" # Ensures clean versions like 1.0.1

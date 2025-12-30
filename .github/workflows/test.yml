@@ -24,8 +24,6 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Set up Python
         run: uv python install
-      - name: Print resolved version
-        run: uv run python -c "import hatchling.version; print('Resolved version:', hatchling.version.get_project_version('.'))"
       - name: Run linters
         run: |
           uv run black --check --diff hemoglobin tests

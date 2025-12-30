@@ -7,7 +7,12 @@ dependencies = ["grammarbot>=0.2.0", "python-mimeparse>=2.0.0"]
 dynamic = ["version"]                                                                # Important: tells tools the version isn't static
 
 [dependency-groups]
-dev = ["bandit>=1.9.2", "black>=25.12.0", "isort>=7.0.0"]
+dev = [
+    "bandit>=1.9.2",
+ "black>=25.12.0",
+ "hatchling>=1.28.0",
+ "isort>=7.0.0",
+]
 
 [build-system]
 # Tell uv to use hatchling as the builder
@@ -20,3 +25,6 @@ fallback-version = "0.0.0" # <--- Add this line
 
 [tool.hatch.version.raw-options]
 local_scheme = "no-local-version" # Ensures clean versions like 1.0.1
+
+[tool.hatch.build.targets.wheel]
+packages = ["python3_hemoglobin"]

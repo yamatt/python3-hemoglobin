@@ -26,7 +26,7 @@ jobs:
         run: uv python install
       - name: Run linters
         run: |
-          uv run black --check --diff hemoglobin tests
+          uv run black --no-project --check --diff hemoglobin tests
   security-scanner:
     name: Security Scanner
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
         run: uv python install
       - name: Run Bandit
         run: |
-          uv run bandit -r hemoglobin
+          uv run --no-project bandit -r hemoglobin
   test:
     name: Test the library
     runs-on: ubuntu-latest
@@ -69,7 +69,7 @@ jobs:
       - name: Set up Python
         run: uv python install
       - name: Test
-        run: uv run -m unittest discover tests
+        run: uv run --no-project -m unittest discover tests
   functional-test:
     name: Test the cli by running it
     runs-on: ubuntu-latest
@@ -97,8 +97,8 @@ jobs:
         run: uv python install
       - name: Run the cli
         run: |
-          uv run -m ${{ env.name }} --help
-          uv run -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" samples/example.txt
+          uv run --no-project -m ${{ env.name }} --help
+          uv run --no-project -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" samples/example.txt
   api-length-check:
     name: "Checks the max chars in the CLI thousands:"
     runs-on: ubuntu-latest
@@ -121,4 +121,4 @@ jobs:
         run: |
           python3 -c 'print(open("./samples/long_1000c.txt", "r").read()*${{ matrix.text-length-thousands }})' > test.txt
           wc -c test.txt
-          uv run -m ${{ env.name }} --log INFO "${{secrets.GRAMMARBOT_APIKEY}}" test.txt
+          uv run --no-project -m ${{ env.name }} --log INFO "${{secrets.GRAMMARBOT_APIKEY}}" test.txt

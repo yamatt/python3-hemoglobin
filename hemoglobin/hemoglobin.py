@@ -1,9 +1,9 @@
+import os
 from collections import namedtuple
 from getpass import getpass
-import os
 
-from .grammarbot import HemoglobinGrammarBot as GrammarBotClient
 from .files import HemoglobinFile
+from .grammarbot import HemoglobinGrammarBot as GrammarBotClient
 
 BaseConfig = namedtuple("Config", ["apikey", "paths", "language"])
 

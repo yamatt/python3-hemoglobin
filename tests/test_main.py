@@ -1,5 +1,4 @@
 import unittest
-
 from argparse import ArgumentError
 
 from hemoglobin.__main__ import create_args

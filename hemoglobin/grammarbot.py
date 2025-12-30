@@ -3,8 +3,7 @@ from typing import List
 
 import mimeparse
 import requests
-
-from grammarbot import GrammarBotClient, GrammarBotApiResponse, GrammarBotMatch
+from grammarbot import GrammarBotApiResponse, GrammarBotClient, GrammarBotMatch
 
 
 class Language(Enum):
@@ -43,6 +42,8 @@ class HemoglobinGrammarBot(GrammarBotClient):
     API_RESPONSE = HemoglobinGrammarBotApiResponse
     MAX_CHARS = 7000
 
+    TIMEOUT = 10  # seconds
+
     def __init__(
         self,
         base_uri: str = "http://api.grammarbot.io/",
@@ -59,7 +60,7 @@ class HemoglobinGrammarBot(GrammarBotClient):
     def get_response(self, text: str):
         params = self._create_params(text)
         self.api_calls_made += 1
-        return requests.get(self._endpoint, params=params)
+        return requests.get(self._endpoint, params=params, timeout=self.TIMEOUT)
 
     def check_response(self, response):
         main_mime_type, sub_mime_type, _ = mimeparse.parse_mime_type(

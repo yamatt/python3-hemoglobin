@@ -1,6 +1,6 @@
+import unittest
 from io import StringIO
 from tempfile import NamedTemporaryFile
-import unittest
 from unittest.mock import Mock
 
 from hemoglobin.files import HemoglobinFile

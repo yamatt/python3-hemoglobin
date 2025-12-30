@@ -1,10 +1,10 @@
 import argparse
+import logging
 from getpass import getpass
 from json import dumps as json_dumps
-import logging
 
-from .hemoglobin import Hemoglobin, Config
 from .grammarbot import Language as Languages
+from .hemoglobin import Config, Hemoglobin
 
 
 def create_args():

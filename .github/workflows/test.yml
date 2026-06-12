@@ -17,7 +17,7 @@ jobs:
     name: Lint Code
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
         with:
           fetch-depth: 0
       - name: Install uv
@@ -31,7 +31,7 @@ jobs:
     name: Security Scanner
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
         with:
           fetch-depth: 0
       - name: Install uv
@@ -58,7 +58,7 @@ jobs:
           - "3.14"
         os: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
         with:
           fetch-depth: 0
       - name: Install uv
@@ -85,7 +85,7 @@ jobs:
           - "3.14"
         os: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
         with:
           fetch-depth: 0
       - name: Install uv
@@ -109,7 +109,7 @@ jobs:
       matrix:
         text-length-thousands: [2, 5, 7, 8, 9, 10]
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v6.0.3
         with:
           fetch-depth: 0
       - name: Install uv

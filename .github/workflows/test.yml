@@ -14,7 +14,7 @@ on:
       - ".python-version"
       - "pyproject.toml"
       - "uv.lock"
-  pull-request:
+  pull_request:
     branches:
       - main
     paths:
@@ -23,7 +23,6 @@ on:
       - ".python-version"
       - "pyproject.toml"
       - "uv.lock"
-     
 
 permissions:
   contents: read

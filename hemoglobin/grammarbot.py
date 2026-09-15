@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import List
 
 import mimeparse
 import requests
@@ -28,7 +27,7 @@ class HemoglobinGrammarBotApiResponse(GrammarBotApiResponse):
     MATCH = HemoglobinGrammarBotMatch
 
     @property
-    def matches(self) -> List[GrammarBotMatch]:
+    def matches(self) -> list[GrammarBotMatch]:
         """
         Different matches detected by the GrammarBot API.
         """
@@ -50,7 +49,7 @@ class HemoglobinGrammarBot(GrammarBotClient):
         api_key: str = "python-default",
         language: Language = Language.EN_US,
     ):
-        super(HemoglobinGrammarBot, self).__init__(base_uri=base_uri, api_key=api_key)
+        super().__init__(base_uri=base_uri, api_key=api_key)
         self.language = language
         self.api_calls_made = 0
 
@@ -84,9 +83,7 @@ class HemoglobinGrammarBot(GrammarBotClient):
             if para:
                 if len(para) > self.MAX_CHARS:
                     raise GrammarBotException(
-                        "A paragraph is longer than {max_chars} maximum number of characters for GrammarBot. Processing cannot continue.".format(
-                            max_chars=self.MAX_CHARS
-                        )
+                        f"A paragraph is longer than {self.MAX_CHARS} maximum number of characters for GrammarBot. Processing cannot continue."
                     )
                 if (len(buffer) + len(para)) > self.MAX_CHARS:
                     response = self.get_response(buffer)

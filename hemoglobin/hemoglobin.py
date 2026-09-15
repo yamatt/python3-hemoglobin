@@ -1,6 +1,8 @@
 import os
+import sys
 from collections import namedtuple
 from getpass import getpass
+from typing import ClassVar
 
 from .files import HemoglobinFile
 from .grammarbot import HemoglobinGrammarBot as GrammarBotClient
@@ -22,19 +24,18 @@ class Config(BaseConfig):
                 apikey = getpass("Enter your API key: ")
                 if not apikey:
                     print("GrammarBot API key is not defined.")
-                    exit(1)
+                    sys.exit(1)
         language = args.language
-        if not language:
-            if cls.GRAMMARBOT_LANGUAGE_ENV_NAME in os.environ:
-                language = os.environ[cls.GRAMMARBOT_LANGUAGE_ENV_NAME]
-        return cls(apikey=apikey, paths=args.path, language=args.language)
+        if not language and cls.GRAMMARBOT_LANGUAGE_ENV_NAME in os.environ:
+            language = os.environ[cls.GRAMMARBOT_LANGUAGE_ENV_NAME]
+        return cls(apikey=apikey, paths=args.path, language=language)
 
 
-class Hemoglobin(object):
+class Hemoglobin:
     GRAMMARBOT_CLIENT = GrammarBotClient
     HEMOGLOBIN_FILE = HemoglobinFile
 
-    ACCEPTABLE_FILE_EXTENSIONS = ["txt", "md"]
+    ACCEPTABLE_FILE_EXTENSIONS: ClassVar[list[str]] = ["txt", "md"]
 
     @classmethod
     def from_config(cls, config):
@@ -110,7 +111,7 @@ class Hemoglobin(object):
         self._files.append(self.HEMOGLOBIN_FILE.from_path(file_path, self))
 
     def to_dict(self):
-        return dict(
-            (grammarbot_file.f.name, grammarbot_file.to_dict())
+        return {
+            grammarbot_file.f.name: grammarbot_file.to_dict()
             for grammarbot_file in self.files
-        )
+        }

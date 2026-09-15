@@ -1,6 +1,5 @@
 import argparse
 import logging
-from getpass import getpass
 from json import dumps as json_dumps
 
 from .grammarbot import Language as Languages
@@ -41,19 +40,17 @@ def render_human(hemoglobin):
     for grammarbot_file in hemoglobin.files:
         print(grammarbot_file.f.name)
         for match in grammarbot_file.matches:
-            print("\tSentence: {sentence}".format(sentence=match.sentence))
-            print("\t\tMessage: {message}".format(message=match.message))
+            print(f"\tSentence: {match.sentence}")
+            print(f"\t\tMessage: {match.message}")
             print("\t\tPossible corrections:")
             for correction in match.corrections:
-                print("\t\t\t{correction}".format(correction=correction))
+                print(f"\t\t\t{correction}")
             print("\t\tDetail:")
-            print("\t\t\tType: {type}".format(type=match.type))
-            print("\t\t\tCategory: {category}".format(category=match.category))
-            print("\t\t\tRule: {rule}".format(rule=match.rule))
+            print(f"\t\t\tType: {match.type}")
+            print(f"\t\t\tCategory: {match.category}")
+            print(f"\t\t\tRule: {match.rule}")
     print(
-        "Number of API calls made: {api_calls_made}".format(
-            api_calls_made=hemoglobin.grammarbot.api_calls_made
-        )
+        f"Number of API calls made: {hemoglobin.grammarbot.api_calls_made}"
     )
 
 

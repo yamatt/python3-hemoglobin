@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from unittest.mock import Mock
 
-from hemoglobin.hemoglobin import Config, Hemoglobin
+from hemoglobin.hemoglobin import Hemoglobin
 
 
 class TestHemoglobin(unittest.TestCase):

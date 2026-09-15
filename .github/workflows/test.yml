@@ -42,10 +42,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version-file: "main/.python-version"
+          python-version-file: ".python-version"
       - name: Run linters
         run: |
-          uv run black --check --diff hemoglobin tests
+          uv run ruff check hemoglobin
   security-scanner:
     name: Security Scanner
     runs-on: ubuntu-latest

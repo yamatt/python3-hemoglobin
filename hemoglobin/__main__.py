@@ -1,7 +1,7 @@
 import click
 
-from .hemoglobin import Hemoglobin
 from .grammarbot import Language
+from .hemoglobin import Hemoglobin
 from .rendering import render_human, render_json
 
 

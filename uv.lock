@@ -353,6 +353,7 @@ wheels = [
 name = "python3-hemoglobin"
 source = { editable = "." }
 dependencies = [
+    { name = "click" },
     { name = "grammarbot" },
     { name = "python-mimeparse" },
 ]
@@ -368,6 +369,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "click", specifier = ">=8.3.1" },
     { name = "grammarbot", specifier = ">=0.2.0" },
     { name = "python-mimeparse", specifier = ">=2.0.0" },
 ]

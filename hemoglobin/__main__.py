@@ -1,68 +1,24 @@
-import argparse
-import logging
-from json import dumps as json_dumps
+import click
 
-from .grammarbot import Language as Languages
-from .hemoglobin import Config, Hemoglobin
+from .hemoglobin import Hemoglobin
+from .rendering import render_human, render_json
 
 
-def create_args():
-    """
-    Creates arguments for this main function.
-    Returns the created parser object.
-    """
-    parser = argparse.ArgumentParser(description="Check the contents of text files")
-
-    parser.add_argument("apikey", help="Your API key for GrammarBot.", nargs="?")
-    parser.add_argument(
-        "--json",
-        "-j",
-        action="store_true",
-        default=False,
-        dest="use_json_output",
-        help="Use argument to have the results output as json.",
-    )
-    parser.add_argument(
-        "--language",
-        "-l",
-        help="Language to use.",
-        choices=Languages,
-        type=Languages,
-        default=Languages.EN_US,
-    )
-    parser.add_argument("--log", dest="log_level", help="Log level.", default="warning")
-
-    parser.add_argument("path", help="Where to find these files to parse.", nargs="+")
-    return parser
-
-
-def render_human(hemoglobin):
-    for grammarbot_file in hemoglobin.files:
-        print(grammarbot_file.f.name)
-        for match in grammarbot_file.matches:
-            print(f"\tSentence: {match.sentence}")
-            print(f"\t\tMessage: {match.message}")
-            print("\t\tPossible corrections:")
-            for correction in match.corrections:
-                print(f"\t\t\t{correction}")
-            print("\t\tDetail:")
-            print(f"\t\t\tType: {match.type}")
-            print(f"\t\t\tCategory: {match.category}")
-            print(f"\t\t\tRule: {match.rule}")
-    print(
-        f"Number of API calls made: {hemoglobin.grammarbot.api_calls_made}"
-    )
-
-
-def render_json(hemoglobin):
-    print(json_dumps(hemoglobin.to_dict()))
-
-
-if __name__ == "__main__":
-    args = create_args().parse_args()
-    logging.basicConfig(level=args.log_level.upper())
-    hemoglobin = Hemoglobin.from_config(Config.from_args(args))
-    if args.use_json_output:
+@click.command()
+@click.option(
+    "--apikey",
+    help="Your API key",
+    envvar="HEMOGLOBIN_GRAMMARBOT_API_KEY",
+)
+@click.option("--path", help="Where to find these files to parse.", multiple=True)
+@click.option("--language", help="Language to use.", default="en_US")
+@click.option("--use-json", "use_json", is_flag=True, help="Use JSON output")
+def main(apikey, path, language, use_json):
+    hemoglobin = Hemoglobin(apikey=apikey, paths=path, language=language)
+    if use_json:
         render_json(hemoglobin)
     else:
         render_human(hemoglobin)
+
+if __name__ == "__main__":
+    main()

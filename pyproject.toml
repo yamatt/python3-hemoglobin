@@ -3,8 +3,15 @@ name = "python3-hemoglobin"
 description = "A CLI wrapper for GrammarBot so it can be used from CI/CD pipelines "
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["grammarbot>=0.2.0", "python-mimeparse>=2.0.0"]
-dynamic = ["version"]                                                                # Important: tells tools the version isn't static
+dynamic = ["version"]
+dependencies = [
+    "click>=8.3.1",
+    "grammarbot>=0.2.0",
+    "python-mimeparse>=2.0.0",
+]
+
+[project.scripts]
+hemoglobin = "hemoglobin.__main__:main"
 
 [dependency-groups]
 dev = [
@@ -28,4 +35,4 @@ fallback-version = "0.0.0" # <--- Add this line
 local_scheme = "no-local-version" # Ensures clean versions like 1.0.1
 
 [tool.hatch.build.targets.wheel]
-packages = ["python3_hemoglobin"]
+packages = ["hemoglobin"]

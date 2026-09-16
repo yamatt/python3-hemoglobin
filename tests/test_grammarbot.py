@@ -61,15 +61,21 @@ class TestGrammarBotClient(unittest.TestCase):
         class MockResponse:
             headers = {"Content-Type": "application/json; charset=UTF-8"}
 
-        result = self.test_hemoglobingrammarbot.check_response(MockResponse)
+            def json(self):
+                return {"warnings": {"incompleteResults": False}, "software": {"status": "ok"}, "matches": []}
+
+        result = self.test_hemoglobingrammarbot.check_response(MockResponse())
 
     def test_check_response_correct_content_type_without_encoding_part(self):
         class MockResponse:
             headers = {"Content-Type": "binary/text"}
             text = "example error"
 
+            def json(self):
+                return {"warnings": {"incompleteResults": False}, "software": {"status": "ok"}, "matches": []}
+
         with self.assertRaises(GrammarBotException):
-            self.test_hemoglobingrammarbot.check_response(MockResponse)
+            self.test_hemoglobingrammarbot.check_response(MockResponse())
 
     def test_under_max_chars(self):
         test_short_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n\nPhasellus augue odio, consectetur ut justo nec, sollicitudin convallis libero."""
@@ -124,3 +130,23 @@ class TestGrammarBotClient(unittest.TestCase):
         self.assertEqual(
             {"matches": [{"name": "foo"}, {"name": "bar"}]}, result.args[0]
         )
+
+    def test_check_response_warnings_raises(self):
+        class MockResponse:
+            headers = {"Content-Type": "application/json"}
+
+            def json(self):
+                return {
+                    "software": {"name": "GrammarBot", "version": "4.3.1", "status": "invalid key"},
+                    "warnings": {"incompleteResults": True},
+                    "matches": [],
+                }
+
+            status_code = 200
+
+            text = "{\"software\":{}}"
+
+        with self.assertRaises(GrammarBotException) as cm:
+            self.test_hemoglobingrammarbot.check_response(MockResponse())
+
+        self.assertIn("invalid key", str(cm.exception))

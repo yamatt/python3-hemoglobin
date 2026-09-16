@@ -59,9 +59,14 @@ class HemoglobinGrammarBot(GrammarBotClient):
     def get_response(self, text: str):
         params = self._create_params(text)
         self.api_calls_made += 1
-        return requests.get(self._endpoint, params=params, timeout=self.TIMEOUT)
+        response = requests.get(self._endpoint, params=params, timeout=self.TIMEOUT)
+        response.raise_for_status()
+        return response
 
     def check_response(self, response):
+        response_data = response.json()
+        if response_data["warnings"]["incompleteResults"]:
+            raise GrammarBotException(f"Warnings found in response: {response_data["software"]["status"]}")
         main_mime_type, sub_mime_type, _ = mimeparse.parse_mime_type(
             response.headers["Content-Type"]
         )

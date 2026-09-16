@@ -1,3 +1,6 @@
+> [!WARNING]
+> Grammarbot.io has shut down so this project is being archived
+
 # Hemoglobin
 
 Hemoglobin is a CLI wrapper for GrammarBot so that it can be used to check your content for errors.

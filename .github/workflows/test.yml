@@ -122,9 +122,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Run the cli
+        env:
+          HEMOGLOBIN_GRAMMARBOT_APIKEY: ${{ secrets.GRAMMARBOT_APIKEY }}
         run: |
           uv run -m ${{ env.name }} --help
-          uv run -m ${{ env.name }} "${{secrets.GRAMMARBOT_APIKEY}}" samples/example.txt
+          uv run -m ${{ env.name }} --path samples/example.txt
   api-length-check:
     name: "Checks the max chars in the CLI thousands:"
     runs-on: ubuntu-latest
